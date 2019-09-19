@@ -1,6 +1,7 @@
 package pardisLab2;
 
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ExecutionException;
 
 public class MergeMain {
 	
@@ -72,7 +73,22 @@ public class MergeMain {
 	    
 	    //printArray(array);
 	    
+
+	    array = RandomArray.getRandomArrayRange(size, 0, 5000);
+	    
+	    System.out.println("Attempting executor service sort");
+      try {
+        time = System.currentTimeMillis();
+        int[] sorted = new MergeSortExecutorService().sort(array);
+        System.out.println("Sorting took: "+ (System.currentTimeMillis() - time) + " ms");
+        System.out.println("Sort done. Is sorted: " + isSorted(sorted));
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      } catch (ExecutionException e) {
+        e.printStackTrace();
+      }
 		
+	    //printArray(sorted);
 	}
 	
 
