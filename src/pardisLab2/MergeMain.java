@@ -12,9 +12,16 @@ public class MergeMain {
 		
 		int array[] = RandomArray.getRandomArrayRange(size, 0, 5000);
 		
-
+		System.out.println("Attempting sequential sort");
 		
-		MergeSequential.sortWithTimer(array);
+
+	    long time = System.currentTimeMillis();
+		
+		MergeSequential.sort(array);
+		
+		System.out.println("Sorting took: " + (System.currentTimeMillis()-time) + " ms");
+
+	    System.out.println("Sort done. Is Sorted: " + isSorted(array));
 		
 		//printArray(array);
 
@@ -28,7 +35,7 @@ public class MergeMain {
 
 	    System.out.println("Attempting fork solve");
 	    
-	    long time = System.currentTimeMillis();
+	    time = System.currentTimeMillis();
 	    MergeSortRecursiveAction recursive = new MergeSortRecursiveAction(array,0,array.length-1);
 	    
 	    pool.execute(recursive);
@@ -44,17 +51,42 @@ public class MergeMain {
 	    }
 		
 	    System.out.println("Sorting took: " + (System.currentTimeMillis() - time) + " ms");
-	    System.out.println("Done");
+	    System.out.println("Sort done. Is Sorted: " + isSorted(array));
 	    System.out.println("Most tasks queued: " + mostTasks);
 	   
 	    //printArray(array);
 		
+	    
+	    System.out.println("Starting ParallelStream sorter");
+	    
+	    array = RandomArray.getRandomArrayRange(size, 0, 5000);
+	    
+	    
+	    
+	    System.out.println("Attempting parallel stream sort");
+	    time = System.currentTimeMillis();
+	    MergeStream.sort(array);
+	    System.out.println("Sorting took: "+ (System.currentTimeMillis() - time) + " ms");
+	    System.out.println("Sort done. Is sorted: " + isSorted(array));
+	    
+	    
+	    //printArray(array);
+	    
 		
 	}
 	
 
 	
-	
+	public static boolean isSorted(int[] array) {
+		
+		for(int i=0;i<array.length-1;i++) {
+			if(array[i] > array[i+1]) {
+				return false;
+			}
+		}
+		return true;
+		
+	}
 	
 	
 	

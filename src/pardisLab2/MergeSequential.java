@@ -2,18 +2,8 @@ package pardisLab2;
 
 public class MergeSequential {
 	
-	public static void sortWithTimer(int[] array) {
-		System.out.println("Sorting array of size " + array.length);
-		long time = System.currentTimeMillis();
-		System.out.println("Start");
-		sort(array);
-		long time2 = System.currentTimeMillis();
-		System.out.println("Finish");
-		System.out.println("Sorting took: " + (time2-time) + " ms");
-		
-		
-	}
-	
+
+
 	
 	
 	
