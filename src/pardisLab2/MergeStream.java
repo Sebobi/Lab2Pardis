@@ -36,36 +36,13 @@ public class MergeStream {
 		}
 		
 	}
-	
-	
-	
 	private static void streamSort(int array[], int left, int right) {
-		//Parallell stream sort
-		ArrayList<Integer> list = new ArrayList<>(right-left-1);
+
+		int[] sorted = Arrays.stream(array, left, right+1).parallel().sorted().toArray();
 		
-		for(int i=left;i<=right;i++) {
-			list.add(array[i]);
-			//System.out.print(i + " ");
+		for(int i =0;i<sorted.length;i++) {
+			array[left+i] = sorted[i];
 		}
-		IntegerPointer i = new IntegerPointer();
-		i.value = left;
-		list.parallelStream().sorted()
-				.forEachOrdered(e -> putAndIncrement(array,e,i));
-				
-
 		
 	}
-	
-	private static void putAndIncrement(int array[],int e, IntegerPointer i) {
-		array[i.value] = e;
-		i.value++;
-	}
-	
-	
-
-
-}
-
-class IntegerPointer {
-	public int value;
 }
