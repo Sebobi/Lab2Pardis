@@ -6,12 +6,12 @@ import java.util.Random;
 
 public class QuickSort {
 	
-	private static int LIMIT = 100;
+	private static int LIMIT = 8000;
 	
 	
     public static int[] sort(int arr[]) 
     {  
-    		if(arr.length <= 5000) {
+    		if(arr.length <= LIMIT) {
     			MergeSequential.sort(arr);
     			return arr;
     		}
@@ -19,7 +19,7 @@ public class QuickSort {
               now at right place */
     		Random random = new Random();
     		
-			int place = random.nextInt(arr.length);
+			int place = random.nextInt(arr.length);	
         	int pivot = arr[place];
         	
         	
