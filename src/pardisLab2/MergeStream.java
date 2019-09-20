@@ -7,14 +7,14 @@ import java.util.stream.Stream;
 
 public class MergeStream {
 	
+	
 	private static final int LIMIT = 50000;
 	
-	public static void sort(int[] array) {
-		//Arrays.parallelSort(array);
-		sort(array,0,array.length-1);
+	public static void sortStream2(int array[]) {
+		sortStream2(array,0,array.length-1);
 	}
 	
-	public static void sort(int array[], int left, int right) {
+	public static void sortStream2(int array[], int left, int right) {
 		if(left < right) {
 			
 			if(right-left <= LIMIT) {
@@ -25,8 +25,8 @@ public class MergeStream {
 
 				int middle = (left+right)/2;
 				
-				sort(array,left,middle);
-				sort(array,middle+1,right);
+				sortStream2(array,left,middle);
+				sortStream2(array,middle+1,right);
 				
 				MergeSequential.merge(array,left,middle,right);
 				
@@ -45,4 +45,29 @@ public class MergeStream {
 		}
 		
 	}
+  public static void sort(int[] arr) {
+    int[] array = arr;
+    int n = array.length;
+    for (int currSize = 1; currSize < 2 * n; currSize *= 2) {
+      int[][] grouped = new int[(int)Math.ceil(n / (2.0 * currSize))][2 * currSize];
+      for (int i = 0, left = 0; left < n; i++, left += 2 * currSize) {
+        int middle = Math.min(left + currSize - 1, n - 1);
+        int right = Math.min(left + (2 * currSize) - 1, n - 1);
+
+        grouped[i] = Arrays.copyOfRange(array, left, right + 1);
+
+        // Special case for last array
+        if (i == grouped.length - 1) {
+          for (int j = right - left + 1; j < grouped[i].length; j++) {
+            grouped[i][j] = Integer.MAX_VALUE;
+          }
+        }
+      }
+      array = Arrays.copyOfRange(Arrays.asList(grouped).parallelStream().flatMapToInt(group -> {
+        MergeSequential.merge(group, 0, Math.max(0, group.length / 2 - 1), group.length - 1);
+        return Arrays.stream(group);
+      }).toArray(), 0, arr.length);
+    }
+    System.arraycopy(array, 0, arr, 0, arr.length);
+  }
 }

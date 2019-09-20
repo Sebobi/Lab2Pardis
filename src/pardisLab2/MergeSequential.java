@@ -27,7 +27,7 @@ public class MergeSequential {
 
 	public static void merge(int array[], int left, int middle, int right) {
 		
-		if (array[middle] <= array[middle + 1])
+		if (middle + 1 >= array.length || array[middle] <= array[middle + 1])
 			return;
 		
 		
