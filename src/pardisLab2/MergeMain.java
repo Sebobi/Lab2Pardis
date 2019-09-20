@@ -88,7 +88,25 @@ public class MergeMain {
         e.printStackTrace();
       }
 		
-	    //printArray(sorted);
+      System.out.println("Attempting ParallellStream 2");
+      array = RandomArray.getRandomArrayRange(size,0,5000);
+      
+      time = System.currentTimeMillis();
+      MergeStream.sortStream2(array, 0, array.length-1);
+      
+      System.out.println("Sorting took: " + (System.currentTimeMillis() - time) + " ms");
+      System.out.println("Is sorted: " + isSorted(array));
+      
+      System.out.println("Attempting Parallellstream quicksort");
+      
+      array = RandomArray.getRandomArrayRange(size,0,5000);
+      time = System.currentTimeMillis();
+      array = QuickSort.sort(array);
+      
+      System.out.println("Sorting took: " + (System.currentTimeMillis() - time) + " ms");
+      System.out.println("Is sorted: " + isSorted(array));
+      
+      
 	}
 	
 
