@@ -16,7 +16,8 @@ public class MergeStream {
         int middle = Math.min(left + currSize - 1, n - 1);
         int right = Math.min(left + (2 * currSize) - 1, n - 1);
 
-        grouped[i] = Arrays.copyOfRange(array, left, right + 1);
+        // grouped[i] = Arrays.copyOfRange(array, left, right + 1);
+        System.arraycopy(array, left, grouped[i], 0, right - left + 1);
 
         // Special case for last array
         if (i == grouped.length - 1) {
