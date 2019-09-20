@@ -7,65 +7,29 @@ import java.util.stream.Stream;
 
 public class MergeStream {
 	
-	private static final int LIMIT = 50000;
-	
-	public static void sort(int[] array) {
-		//Arrays.parallelSort(array);
-		sort(array,0,array.length-1);
-	}
-	
-	public static void sort(int array[], int left, int right) {
-		if(left < right) {
-			
-			if(right-left <= LIMIT) {
-				//Stream solve
-				streamSort(array,left,right);
-				
-			} else {
+  public static void sort(int[] arr) {
+    int[] array = arr;
+    int n = array.length;
+    for (int currSize = 1; currSize < 2 * n; currSize *= 2) {
+      int[][] grouped = new int[(int)Math.ceil(n / (2.0 * currSize))][2 * currSize];
+      for (int i = 0, left = 0; left < n; i++, left += 2 * currSize) {
+        int middle = Math.min(left + currSize - 1, n - 1);
+        int right = Math.min(left + (2 * currSize) - 1, n - 1);
 
-				int middle = (left+right)/2;
-				
-				sort(array,left,middle);
-				sort(array,middle+1,right);
-				
-				MergeSequential.merge(array,left,middle,right);
-				
-				
-			}
-			
-		}
-		
-	}
-	
-	
-	
-	private static void streamSort(int array[], int left, int right) {
-		//Parallell stream sort
-		ArrayList<Integer> list = new ArrayList<>(right-left-1);
-		
-		for(int i=left;i<=right;i++) {
-			list.add(array[i]);
-			//System.out.print(i + " ");
-		}
-		IntegerPointer i = new IntegerPointer();
-		i.value = left;
-		list.parallelStream().sorted()
-				.forEachOrdered(e -> putAndIncrement(array,e,i));
-				
+        grouped[i] = Arrays.copyOfRange(array, left, right + 1);
 
-		
-	}
-	
-	private static void putAndIncrement(int array[],int e, IntegerPointer i) {
-		array[i.value] = e;
-		i.value++;
-	}
-	
-	
-
-
-}
-
-class IntegerPointer {
-	public int value;
+        // Special case for last array
+        if (i == grouped.length - 1) {
+          for (int j = right - left + 1; j < grouped[i].length; j++) {
+            grouped[i][j] = Integer.MAX_VALUE;
+          }
+        }
+      }
+      array = Arrays.copyOfRange(Arrays.asList(grouped).parallelStream().flatMapToInt(group -> {
+        MergeSequential.merge(group, 0, Math.max(0, group.length / 2 - 1), group.length - 1);
+        return Arrays.stream(group);
+      }).toArray(), 0, arr.length);
+    }
+    System.arraycopy(array, 0, arr, 0, arr.length);
+  }
 }
