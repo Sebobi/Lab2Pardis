@@ -11,7 +11,7 @@ public class MergeSortExecutorService {
   private static ExecutorService exec = Executors.newCachedThreadPool();//newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
   public int[] sort(int[] arr) throws InterruptedException, ExecutionException {
-    int[] sortedArr = new SortTask(arr, 0, arr.length, Runtime.getRuntime().availableProcessors()).call();
+    int[] sortedArr = new SortTask(arr, 0, arr.length, Runtime.getRuntime().availableProcessors()-1).call();
     exec.shutdown();
     return sortedArr;
   }
@@ -32,8 +32,8 @@ public class MergeSortExecutorService {
       if (threadLimit <= 0) {
         return merge(new SortTask(arr, a, half, threadLimit).call(), new SortTask(arr, half, b, threadLimit).call());
       }
-      Future<int[]> firstHalfSorted = exec.submit(new SortTask(arr, a, half, --threadLimit));
-      Future<int[]> secondHalfSorted = exec.submit(new SortTask(arr, half, b, --threadLimit));
+      Future<int[]> firstHalfSorted = exec.submit(new SortTask(arr, a, half, threadLimit/2));
+      Future<int[]> secondHalfSorted = exec.submit(new SortTask(arr, half, b, threadLimit/2));
       return merge(firstHalfSorted.get(), secondHalfSorted.get());
     }
 

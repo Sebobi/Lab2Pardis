@@ -9,6 +9,9 @@ public class MergeMain {
 	public static void main(String[] args) {
 		
 
+		System.out.println("Available processors: " + Runtime.getRuntime().availableProcessors());
+		
+		
 		int size = 10000000;
 		
 		int array[] = RandomArray.getRandomArrayRange(size, 0, 5000);
